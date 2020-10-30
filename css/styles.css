@@ -156,6 +156,7 @@ header h1 {
     outline: none;
     border-radius: 0.25em;
     border: 1px solid rgba(50, 50, 50, 0.3);
+    z-index: 10;
 }
 
 .modal-img {
