@@ -33,10 +33,12 @@ createHTML = (data) => {
 }
 
 addEvent = (data) =>{
+    let body = document.querySelector('body')
     let cards = document.querySelectorAll('.card')
+    let gallery = document.querySelector('.gallery')
     for(let i = 0; i < cards.length; i++){
         cards[i].addEventListener('click', (e) => {
-            cards[i].insertAdjacentHTML('beforeend', `
+            gallery.insertAdjacentHTML('afterend', `
             <div class="modal-container">
                 <div class="modal">
                     <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -60,12 +62,19 @@ addEvent = (data) =>{
             )
             //log the clicked card
             let clicked = cards[i]
-            let clickedName = clicked.children[1].children[0].textContent
+            let closeBtn = document.getElementById('modal-close-btn')
+            closeBtn.addEventListener('click', () =>{
+                let popUp = document.querySelector('.modal-container')
+                body.removeChild(popUp)
+                
+            })
             
-            console.log(data[i])
-            data[i]
-            console.log()
-            console.log(clickedName)
+            //card click
+            //clicked
+
+            //data on clicked card
+            //data[i]
+ 
 
         })
     }

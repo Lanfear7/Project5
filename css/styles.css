@@ -125,6 +125,7 @@ header h1 {
 ======================================== */
 
 .modal-container {
+    display: block;
     position: fixed;
     top: 0;
     right: 0;
