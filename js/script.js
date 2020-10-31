@@ -32,6 +32,16 @@ createHTML = (data) => {
     return  data
 }
 
+formatPhoneNumber = (phoneNumberString) => {
+    var cleaned = phoneNumberString.replace(/\D/g, '')
+    if (cleaned.length == 10) {
+        //reformat and return phone number
+        return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+    }
+
+    return null;
+  }
+
 addEvent = (data) =>{
     let body = document.querySelector('body')
     let cards = document.querySelectorAll('.card')
@@ -48,7 +58,7 @@ addEvent = (data) =>{
                         <p class="modal-text">${data[i].email}</p>
                         <p class="modal-text cap">${data[i].location.city}</p>
                         <hr>
-                        <p class="modal-text">${data[i].phone}</p>
+                        <p class="modal-text">${formatPhoneNumber(data[i].phone)}</p>
                         <p class="modal-text">${data[i].location.street.number} ${data[i].location.street.name}, ${data[i].location.city}, ${data[i].location.postcode}</p>
                         <p class="modal-text">Birthday: ${data[i].dob.date.slice(0, 10)}</p>
                     </div>
@@ -62,6 +72,7 @@ addEvent = (data) =>{
             )
             //log the clicked card
             let clicked = cards[i]
+            console.log(data[i])
             let closeBtn = document.getElementById('modal-close-btn')
             closeBtn.addEventListener('click', () =>{
                 let popUp = document.querySelector('.modal-container')
