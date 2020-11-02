@@ -47,6 +47,43 @@ formatPhoneNumber = (phoneNumberString) => {
     var cleaned = phoneNumberString.replace(/\D/g, '')
     return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
 }
+
+addEvent = (data) =>{
+    let body = document.querySelector('body')
+    let cards = document.querySelectorAll('.card')
+    for(let i = 0; i < cards.length; i++){
+        cards[i].addEventListener('click', () => {
+            popUp(data,i)
+            let next = document.querySelector('#modal-next')
+            next.addEventListener('click', () =>{
+                nextPerson(data,i)
+                console.log('back from nextPerson')
+                
+            })
+            
+            //close pop up form
+            let closeBtn = document.getElementById('modal-close-btn')
+            closeBtn.addEventListener('click', () =>{
+                let popUp = document.querySelector('.modal-container')
+                body.removeChild(popUp)
+                
+            })
+        })
+    }
+    
+}
+nextPerson = (data, index) =>{
+    let plus = ++index 
+    let nextPerson = data[plus]
+    console.log(nextPerson)
+    let modal= document.querySelector('.modal-container')
+    let gallery = document.querySelector('.gallery')
+    modal.remove()
+    gallery.insertAdjacentHTML('afterend', popUp(data, plus))
+    console.log('before return')
+    return
+}
+
 popUp = (data,index) => {
     let gallery = document.querySelector('.gallery')
     gallery.insertAdjacentHTML('afterend', `
@@ -72,51 +109,22 @@ popUp = (data,index) => {
             </div>`
             )
 }
-addEvent = (data) =>{
-    let body = document.querySelector('body')
-    let cards = document.querySelectorAll('.card')
-    for(let i = 0; i < cards.length; i++){
-        cards[i].addEventListener('click', () => {
-            popUp(data,i)
-
-            //close pop up form
-            let closeBtn = document.getElementById('modal-close-btn')
-            closeBtn.addEventListener('click', () =>{
-                let popUp = document.querySelector('.modal-container')
-                body.removeChild(popUp)
-                
-            })
-            let prev = document.querySelector('#modal-prev')
-            let next = document.querySelector('#modal-next')
-            prev.addEventListener('click', () => {
-                let previous = --i
-                popUp(data, previous)
-            })
-
-        })
-    }
-    
-}
-
 searchPeople = (value, data) => {
-    console.log('enter')
     let name = value.toUpperCase()
     let body = document.querySelector('body')
-    let gallery = document.querySelector('.gallery')
-    console.log('input is', name)
-    console.log(data)
     for(let i = 0; i < data.length; i ++){
         let userNames = data[i].name.first.toUpperCase()
-        console.log(userNames)
         if(name == userNames){ 
             popUp(data, i)
+            //remove pop up
             let closeBtn = document.getElementById('modal-close-btn')
             closeBtn.addEventListener('click', () =>{
                 let popUp = document.querySelector('.modal-container')
                 body.removeChild(popUp)
                 
             })
+        }else{
+            console.log('not in list')
         }
     }
 }
-
