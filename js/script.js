@@ -11,19 +11,15 @@ fetchData('https://randomuser.me/api/?results=12&nat=us')
 
 //format gallery markup
 createHTML = (data) => {
-    let gallery =document.getElementById('gallery')
+    let gallery = document.getElementById('gallery')
     let search = document.querySelector('.search-container')
     search.innerHTML= `                       
     <form action="#" method="get">
         <input type="search" id="search-input" class="search-input" placeholder="Search...">
         <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>`
-    search.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            let value = e.target.value
-            searchPeople(value, data)
-        }
-    })    
+
+        
     for(let i = 0; i < data.length; i++){
         //HTML creation
         let card = document.createElement('div');
@@ -43,47 +39,49 @@ createHTML = (data) => {
     return  data
 }
 
+//regex to format the phone number
 formatPhoneNumber = (phoneNumberString) => {
     var cleaned = phoneNumberString.replace(/\D/g, '')
     return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
 }
 
+//events of app
 addEvent = (data) =>{
-    let body = document.querySelector('body')
+    let submit = document.getElementById('search-submit')
+    submit.addEventListener('click', () => {
+        let value = document.querySelector('#search-input')
+        let textValue = value.value
+        searchPeople(textValue, data)
+    })
     let cards = document.querySelectorAll('.card')
     for(let i = 0; i < cards.length; i++){
         cards[i].addEventListener('click', () => {
             popUp(data,i)
-            let next = document.querySelector('#modal-next')
-            next.addEventListener('click', () =>{
-                nextPerson(data,i)
-                console.log('back from nextPerson')
-                
-            })
-            
-            //close pop up form
-            let closeBtn = document.getElementById('modal-close-btn')
-            closeBtn.addEventListener('click', () =>{
-                let popUp = document.querySelector('.modal-container')
-                body.removeChild(popUp)
-                
-            })
         })
     }
     
 }
-nextPerson = (data, index) =>{
+
+
+nextPerson = (data, index) => {
+    //increase the index of the person selected
     let plus = ++index 
-    let nextPerson = data[plus]
-    console.log(nextPerson)
     let modal= document.querySelector('.modal-container')
-    let gallery = document.querySelector('.gallery')
     modal.remove()
-    gallery.insertAdjacentHTML('afterend', popUp(data, plus))
-    console.log('before return')
+    popUp(data, plus)
     return
 }
 
+previousPerson = (data, index) => {
+    //will subtract from the index of the selected person
+    let minus = --index 
+    let modal= document.querySelector('.modal-container')
+    modal.remove()
+    popUp(data, minus)
+    return
+} 
+
+//add modal
 popUp = (data,index) => {
     let gallery = document.querySelector('.gallery')
     gallery.insertAdjacentHTML('afterend', `
@@ -108,23 +106,39 @@ popUp = (data,index) => {
                 </div>
             </div>`
             )
-}
-searchPeople = (value, data) => {
-    let name = value.toUpperCase()
-    let body = document.querySelector('body')
-    for(let i = 0; i < data.length; i ++){
-        let userNames = data[i].name.first.toUpperCase()
-        if(name == userNames){ 
-            popUp(data, i)
-            //remove pop up
+            //close pop up form
+            let body = document.querySelector('body')
             let closeBtn = document.getElementById('modal-close-btn')
             closeBtn.addEventListener('click', () =>{
                 let popUp = document.querySelector('.modal-container')
                 body.removeChild(popUp)
                 
             })
-        }else{
-            console.log('not in list')
+            if(index < 11){
+                //next button functionality 
+                let next = document.querySelector('#modal-next')
+                next.addEventListener('click', () =>{
+                    nextPerson(data,index)
+                })
+            }
+            if(index > 0){
+                ////prev button functionality 
+                let prev = document.querySelector('#modal-prev')
+                prev.addEventListener('click', () => {
+                    previousPerson(data, index)
+                })                
+            }
+            
+
+}
+
+//loop over data to see if the name from the search matches any on the screen
+searchPeople = (value, data) => {
+    let name = value.toUpperCase()
+    for(let i = 0; i < data.length; i ++){
+        let userNames = data[i].name.first.toUpperCase()
+        if(name == userNames){ 
+            popUp(data, i)
         }
     }
 }
