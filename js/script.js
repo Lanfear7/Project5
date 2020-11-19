@@ -48,7 +48,8 @@ formatPhoneNumber = (phoneNumberString) => {
 //events of app
 addEvent = (data) =>{
     let submit = document.getElementById('search-submit')
-    submit.addEventListener('click', () => {
+    submit.addEventListener('click', (e) => {
+        e.preventDefault()
         let value = document.querySelector('#search-input')
         let textValue = value.value
         searchPeople(textValue, data)
@@ -122,7 +123,7 @@ popUp = (data,index) => {
                 })
             }
             if(index > 0){
-                ////prev button functionality 
+                //prev button functionality 
                 let prev = document.querySelector('#modal-prev')
                 prev.addEventListener('click', () => {
                     previousPerson(data, index)
@@ -139,6 +140,8 @@ searchPeople = (value, data) => {
         let userNames = data[i].name.first.toUpperCase()
         if(name == userNames){ 
             popUp(data, i)
+        }else if(name != userNames){
+            console.log('no such name')
         }
     }
 }
